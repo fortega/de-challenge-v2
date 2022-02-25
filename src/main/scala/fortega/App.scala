@@ -15,9 +15,9 @@ object App {
         ArgsConfigReaderAdapter(cmdArgs) match {
             case Failure(error) => errorHandler("config", error)
             case Success(config) => {
-                SparkSessionAdapter(config.sparkMaster) match {
+                SparkSessionAdapter() match {
                     case Failure(error) => errorHandler("spark", error)
-                    case Success(spark) => runEtl(config, spark, TransformationList.apply)
+                    case Success(spark) => runEtl(config, spark, TransformationList())
                 }
             }
         }
@@ -29,10 +29,10 @@ object App {
             case Success(data) => {
                 transformations.foreach(transformation =>
                     TransformationAdapter(transformation.process, data) match {
-                        case Failure(error) => errorHandler("transformation", error)
+                        case Failure(error) => errorHandler("transformation", error, exit = false)
                         case Success(transformed) =>
                             CsvLoaderAdapter(config.outputPath, transformation.name, transformed) match {
-                                case Failure(error) => errorHandler("load", error)
+                                case Failure(error) => errorHandler("load", error, exit = false)
                                 case Success(_) => successHandler(transformation.name)
                             }
                     }
@@ -41,9 +41,9 @@ object App {
             }
         }
 
-    def errorHandler(processName: String, error: Throwable): Unit = {
+    def errorHandler(processName: String, error: Throwable, exit: Boolean = true): Unit = {
         println(s"Error($processName): $error")
-        sys.exit(1)
+        if(exit) sys.exit(1)
     }
 
     def successHandler(trasformationName: String) : Unit = {

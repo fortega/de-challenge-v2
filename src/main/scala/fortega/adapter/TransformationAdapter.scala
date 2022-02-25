@@ -1,14 +1,10 @@
 package fortega.adapter
 
+import fortega.port.TransformationPort
 import org.apache.spark.sql.DataFrame
-import scala.util.{ Failure, Success }
+import scala.util.{ Failure, Success, Try }
 
 object TransformationAdapter {
-    def apply(process: DataFrame => DataFrame, data: DataFrame) = {
-        try {
-            Success(data.transform(process))
-        }catch {
-            case error: Throwable => Failure(error)
-        }
-    }
+    def apply(process: DataFrame => DataFrame, data: DataFrame): TransformationPort =
+        Try { data.transform(process) }
 }
