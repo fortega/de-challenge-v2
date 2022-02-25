@@ -14,6 +14,13 @@ class ArgsConfigReaderAdapterTest extends AnyFlatSpec {
         }
     }
 
+    it should "fail if cmdArgs have 0 args" in {
+        ArgsConfigReaderAdapter(arguments.take(0)) match {
+            case Failure(exception) => assert(exception.getClass == classOf[IllegalArgumentException])
+            case Success(value) => fail
+        }
+    }
+
     it should "fail if cmdArgs have 1 args" in {
         ArgsConfigReaderAdapter(arguments.take(1)) match {
             case Failure(exception) => assert(exception.getClass == classOf[IllegalArgumentException])
