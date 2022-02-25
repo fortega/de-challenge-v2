@@ -6,7 +6,7 @@ import scala.util.Failure
 import scala.util.Success
 import fortega.model.{ Config, Transformation }
 import fortega.adapter.CsvLoaderAdapter
-import fortega.adapter.TransformationAdapter
+import fortega.adapter.TransformAdapter
 import org.apache.spark.sql.SparkSession
 import scala.collection.immutable
 
@@ -28,7 +28,7 @@ object App {
             case Failure(error) => errorHandler("extractor", error)
             case Success(data) => {
                 transformations.foreach(transformation =>
-                    TransformationAdapter(transformation.process, data) match {
+                    TransformAdapter(data, transformation.process) match {
                         case Failure(error) => errorHandler("transformation", error, exit = false)
                         case Success(transformed) =>
                             CsvLoaderAdapter(config.outputPath, transformation.name, transformed) match {

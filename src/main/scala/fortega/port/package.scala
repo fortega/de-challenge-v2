@@ -10,5 +10,5 @@ package object port {
   type ConfigReaderPort = Try[Config]
   type SparkSessionPort = Try[SparkSession]
   type LoaderPort = Try[Unit]
-  type TransformationPort = Try[DataFrame]
+  type TransformPort = Try[DataFrame]
 }

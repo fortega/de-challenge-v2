@@ -6,7 +6,7 @@ import scala.util.Failure
 import scala.util.Success
 
 class CsvLoaderAdapterTest extends AnyFlatSpec {
-    import fortega.Utils.spark
+    import fortega.Utils.{ spark, deleteDir, data }
 
     lazy val outputPath = "tmp"
     lazy val fileName = "fileName"
@@ -18,13 +18,14 @@ class CsvLoaderAdapterTest extends AnyFlatSpec {
         }
     }
 
-    it should "succed to save dataframe" in {
-        import spark.implicits._
+    it should "succeed to save dataframe" in {
+        deleteDir(outputPath)
 
-        val data = Seq("test").toDF
-        CsvLoaderAdapterTest.deleteDir(outputPath)
         CsvLoaderAdapter(outputPath, fileName, data) match {
-            case Failure(_) => fail
+            case Failure(error) => {
+                error.printStackTrace()
+                fail
+            }
             case Success(_) => succeed
         }
     }  
@@ -34,13 +35,5 @@ class CsvLoaderAdapterTest extends AnyFlatSpec {
             case Failure(_) => succeed
             case Success(_) => fail
         }
-    }
-}
-
-object CsvLoaderAdapterTest {
-    import java.nio.file.{ Files, Paths }
-
-    def deleteDir(path: String): Unit = {
-        Files.deleteIfExists(Paths.get(path))
     }
 }
