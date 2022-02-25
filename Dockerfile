@@ -10,7 +10,7 @@ COPY src ./src
 
 COPY build.sbt .
 
-RUN sbt package
+RUN sbt clean test package
 
 FROM openjdk:8
 
