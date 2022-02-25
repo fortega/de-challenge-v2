@@ -22,7 +22,7 @@ class JsonExtractorAdapterTest extends AnyFlatSpec {
         }
     }
 
-    it should s"succedd on read $path" in {
+    it should s"succeed on read $path" in {
         JsonExtractorAdapter(spark, path) match {
             case Failure(_) => fail
             case Success(_) => succeed

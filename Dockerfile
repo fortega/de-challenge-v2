@@ -8,6 +8,8 @@ WORKDIR /code
 
 COPY src ./src
 
+COPY data ./data
+
 COPY build.sbt .
 
 RUN sbt clean test package
