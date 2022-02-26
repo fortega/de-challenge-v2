@@ -1,6 +1,6 @@
 # Deployment
 
-To run this ETL you have 3 diferent options:
+To run this ETL you have diferent options:
 
 - Using docker
 - Using SBT
@@ -43,7 +43,7 @@ Where:
 The report could be found in [target/scala-2.13/scoverage-report](target/scala-2.13/scoverage-report/index.html).
 The `covertura.xml` file is generated to enforce coverage in a CI/CD enabled environment (out of the scope of this proyect).
 
-### How to run
+### Run application
 
 > sbt "run data output"
 
