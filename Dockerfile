@@ -10,6 +10,8 @@ COPY src ./src
 
 COPY data ./data
 
+COPY project ./project
+
 COPY build.sbt .
 
 RUN sbt clean test package
