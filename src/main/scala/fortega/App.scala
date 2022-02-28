@@ -5,7 +5,6 @@ import fortega.adapter.{
   JsonExtractorAdapter,
   SparkSessionAdapter
 }
-import fortega.application.TransformationList
 import scala.util.Failure
 import scala.util.Success
 import fortega.model.{Config, Transformation}
@@ -13,6 +12,9 @@ import fortega.adapter.CsvLoaderAdapter
 import fortega.adapter.TransformAdapter
 import org.apache.spark.sql.SparkSession
 import scala.collection.immutable
+import fortega.application.PositionTableTransformation
+import fortega.application.ShotEffectivenessTransformation
+import fortega.application.GoalsAgainstTransformation
 
 object App {
   def main(cmdArgs: Array[String]): Unit = {
@@ -21,7 +23,7 @@ object App {
       case Success(config) => {
         SparkSessionAdapter() match {
           case Failure(error) => errorHandler("spark", error)
-          case Success(spark) => runEtl(config, spark, TransformationList())
+          case Success(spark) => runEtl(config, spark)
         }
       }
     }
@@ -30,7 +32,11 @@ object App {
   def runEtl(
       config: Config,
       spark: SparkSession,
-      transformations: List[Transformation]
+      transformations: List[Transformation] = List(
+        PositionTableTransformation(),
+        ShotEffectivenessTransformation(),
+        GoalsAgainstTransformation()
+      )
   ): Unit =
     JsonExtractorAdapter(spark, config.inputPath) match {
       case Failure(error) => errorHandler("extractor", error)
@@ -38,7 +44,11 @@ object App {
         transformations.foreach(transformation =>
           TransformAdapter(data, transformation.process) match {
             case Failure(error) =>
-              errorHandler("transformation", error, exit = false)
+              errorHandler(
+                s"transformation ${transformation.name}",
+                error,
+                exit = false
+              )
             case Success(transformed) =>
               CsvLoaderAdapter(
                 config.outputPath,
