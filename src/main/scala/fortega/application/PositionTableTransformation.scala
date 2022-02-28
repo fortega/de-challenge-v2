@@ -6,8 +6,14 @@ object PositionTableTransformation extends TransformationBase {
   import org.apache.spark.sql.expressions.Window
   import org.apache.spark.sql.functions.{col, count, rank, sum, when}
 
+  /** The position table for all the seasons.
+    *
+    * Based on https://www.premierleague.com/tables
+    * @return
+    *   transformation
+    */
   def apply() = Transformation(
-    "position table", // Based on -> https://www.premierleague.com/tables
+    "position table",
     df => {
       val base = df
         .where(divisionEPL)

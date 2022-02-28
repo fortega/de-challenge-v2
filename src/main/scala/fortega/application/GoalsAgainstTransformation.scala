@@ -6,8 +6,14 @@ object GoalsAgainstTransformation extends TransformationBase {
   import org.apache.spark.sql.functions.{col, sum, rank}
   import org.apache.spark.sql.expressions.Window
 
+  /** Team with more goals against per season.
+    *
+    * Original: Equipo más goleado por temporada.
+    * @return
+    *   transformation
+    */
   def apply() = Transformation(
-    "goals against", // Equipo más goleado por temporada
+    "goals against",
     df => {
       val base = df
         .where(divisionEPL)

@@ -6,8 +6,15 @@ object ShotEffectivenessTransformation extends TransformationBase {
   import org.apache.spark.sql.expressions.Window
   import org.apache.spark.sql.functions.{col, rank, sum}
 
+  /** Team with best relation of shots ending in goal per season.
+    *
+    * Original: Equipo con la mejor relación de disparos al arco terminando en
+    * gol por temporada.
+    * @return
+    *   transformation
+    */
   def apply() = Transformation(
-    "shot effectiveness", // Equipo con la mejor relación de disparos al arco terminando en gol por temporada
+    "shot effectiveness",
     df => {
       val base = df
         .where(divisionEPL)
