@@ -2,8 +2,8 @@
 
 To run this ETL you have diferent options:
 
-- Using docker
-- Using SBT
+- Docker
+- SBT (Scala Building Tool)
 
 ## Using docker (recommended)
 
@@ -15,7 +15,7 @@ With this option you will run a "standalone" spark server inside a container. Wi
 
 Where `challenge` is the tag name of the image.
 
-The test are run before packaging the app to stop the build in case of problems.
+The "unit tests" run before packaging the app to stop the build in case of problems.
 
 ### Run the container
 
@@ -33,7 +33,7 @@ Where:
 
 ### Requirements
 
-- Java Runtime Environment 8 (OpenJDK HotSpot recommended).
+- Java Runtime Environment 8 (OpenJDK HotSpot 1.8u312 recommended).
 - SBT 1.4.9 +
 
 ### Run tests with coverage report
@@ -43,7 +43,7 @@ Where:
 The report could be found in [target/scala-2.13/scoverage-report](target/scala-2.13/scoverage-report/index.html).
 The `covertura.xml` file is generated to enforce coverage in a CI/CD enabled environment (out of the scope of this proyect).
 
-### Run application
+### Run application directy
 
 > sbt "run data output"
 
@@ -51,3 +51,14 @@ Where:
 
 - `data` is the input directory.
 - `output` is the output directory.
+
+### Generate package (JAR)
+
+To run this job in a [cluster](https://spark.apache.org/docs/latest/cluster-overview.html) (for example [Google Dataproc](https://cloud.google.com/dataproc/)) you need to "package" this application into a "JAR".
+To generate the package run:
+
+> sbt package
+
+The package (JAR) is found in `target/scala-2.13`.
+
+The way to submit a job changes for every cluster type. Please check the [spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html) for more information.
