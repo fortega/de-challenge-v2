@@ -15,9 +15,12 @@ import scala.collection.immutable
 import fortega.application.PositionTableTransformation
 import fortega.application.ShotEffectivenessTransformation
 import fortega.application.GoalsAgainstTransformation
+import org.slf4j.LoggerFactory
 
 object App {
-  def main(cmdArgs: Array[String]): Unit = {
+  private val logger = LoggerFactory.getLogger("fortega.App")
+
+  def main(cmdArgs: Array[String]): Unit =
     ArgsConfigReaderAdapter(cmdArgs) match {
       case Failure(error) => errorHandler("config", error)
       case Success(config) => {
@@ -27,8 +30,16 @@ object App {
         }
       }
     }
-  }
 
+  /** Run the ETL.
+    *
+    * @param config
+    *   configuration of the ETL
+    * @param spark
+    *   spark session to submit the ETL
+    * @param transformations
+    *   list of transformations to do
+    */
   def runEtl(
       config: Config,
       spark: SparkSession,
@@ -55,8 +66,13 @@ object App {
                 transformation.name,
                 transformed
               ) match {
-                case Failure(error) => errorHandler("load", error, exit = false)
-                case Success(_)     => successHandler(transformation.name)
+                case Failure(error) =>
+                  errorHandler(
+                    s"load ${transformation.name}",
+                    error,
+                    exit = false
+                  )
+                case Success(_) => successHandler(transformation.name)
               }
           }
         )
@@ -64,16 +80,30 @@ object App {
       }
     }
 
+  /** Handle an error in the process
+    *
+    * @param processName
+    *   process name
+    * @param error
+    *   error found
+    * @param exit
+    *   if true, halt the application
+    */
   def errorHandler(
       processName: String,
       error: Throwable,
       exit: Boolean = true
   ): Unit = {
-    println(s"Error($processName): $error")
+    logger.error(s"Error($processName): $error")
     if (exit) sys.exit(1)
   }
 
+  /** Handle a success load..
+    *
+    * @param trasformationName
+    *   transformation name
+    */
   def successHandler(trasformationName: String): Unit = {
-    println(s"Success: $trasformationName")
+    logger.info(s"Success: $trasformationName")
   }
 }

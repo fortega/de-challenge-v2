@@ -2,9 +2,10 @@ package fortega.application
 
 import fortega.model.Transformation
 
-object GoalsAgainstTransformation extends TransformationBase {
+object GoalsAgainstTransformation {
   import org.apache.spark.sql.functions.{col, sum, rank}
   import org.apache.spark.sql.expressions.Window
+  import fortega.application.TransformationBase.{divisionEPL, toSeason, fixDate}
 
   /** Team with more goals against per season.
     *

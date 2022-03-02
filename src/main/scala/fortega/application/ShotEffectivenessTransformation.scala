@@ -2,9 +2,10 @@ package fortega.application
 
 import fortega.model.Transformation
 
-object ShotEffectivenessTransformation extends TransformationBase {
+object ShotEffectivenessTransformation {
   import org.apache.spark.sql.expressions.Window
   import org.apache.spark.sql.functions.{col, rank, sum}
+  import fortega.application.TransformationBase.{divisionEPL, toSeason, fixDate}
 
   /** Team with best relation of shots ending in goal per season.
     *

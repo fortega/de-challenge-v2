@@ -10,6 +10,17 @@ object CsvLoaderAdapter {
   private val cleanChars = List(" ")
   private val cleanReplace = "-"
 
+  /** Save the data to CSV file
+    *
+    * @param outputPath
+    *   output directory
+    * @param fileName
+    *   file name
+    * @param data
+    *   data to be saved
+    * @return
+    *   save result
+    */
   def apply(outputPath: String, fileName: String, data: DataFrame): LoaderPort =
     Try {
       import java.io.File.separator

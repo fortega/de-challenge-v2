@@ -3,7 +3,7 @@ package fortega.application
 import scala.util.matching.Regex
 import org.apache.spark.sql.Column
 
-trait TransformationBase {
+object TransformationBase {
   import org.apache.spark.sql.functions.{
     col,
     lit,
@@ -20,7 +20,7 @@ trait TransformationBase {
 
   lazy val divisionEPL = col("Div") === "E0"
 
-  lazy val dataFormatter: List[(Regex, String => String)] = List(
+  private lazy val dataFormatter: List[(Regex, String => String)] = List(
     "[0-9]{4}-[0-9]{2}-[0-9]{2}".r -> (text => {
       val s = text.split("-")
       s"${s(2)}/${s(1)}/${s(0)}"

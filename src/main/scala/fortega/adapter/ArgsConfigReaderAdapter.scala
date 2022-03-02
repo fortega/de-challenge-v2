@@ -5,7 +5,15 @@ import fortega.model.Config
 import fortega.port.ConfigReaderPort
 
 object ArgsConfigReaderAdapter {
-  lazy val argumentsMust = "arguments must be: [inputPath], [outputPath]."
+  private val argumentsMust = "arguments must be: [inputPath], [outputPath]."
+
+  /** Read configuration for the process from the command line arguments.
+    *
+    * @param cmdArgs
+    *   command line arguments
+    * @return
+    *   configuration read result
+    */
   def apply(cmdArgs: Array[String]): ConfigReaderPort = {
     if (cmdArgs == null)
       Failure(new IllegalArgumentException("null arguments"))
