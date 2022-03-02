@@ -78,7 +78,11 @@ object PositionTableTransformation {
         .withColumn(
           "Position",
           rank()
-            .over(Window.partitionBy("Season").orderBy(col("Points").desc))
+            .over(
+              Window
+                .partitionBy("Season")
+                .orderBy(col("Points").desc, col("GD").desc, col("GF").desc)
+            )
         )
     }
   )
